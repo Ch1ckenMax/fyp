@@ -1,0 +1,4 @@
+- Design a CAN Message for this
+    - Keep CSMA/CD and message priority in mind
+    - Suggest the usage for this message (also can be used for data aquisition)
+- Re-invent the wheel and create a simple UI library for this

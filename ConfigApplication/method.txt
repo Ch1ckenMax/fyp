@@ -1,0 +1,14 @@
+Function 1: Easy modification of parameters
+- Find a way for the host machine to write on the target machine's memory
+    - OpenOCD? STProgrammer?
+- Host machine: YAML config file that matches with the parameters required by the target machine => upload to target machine with specific syntax => target machine reads upon restart
+- Target machine: parser that reads the parameters carefully at startup
+
+Function 2: Calibration
+- Find a way to connect host to memory in REAL time
+- Perhaps just use SVW log and parse something? Serial?
+- Client reads the sensor values, record, and change the YAML file, and upload it back
+    - Graphical demonstration (min max throttle, deadzone settings etc.)
+
+Function 3: Logging
+- Check the sVW logs in real time
