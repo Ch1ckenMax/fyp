@@ -6,9 +6,10 @@
 - Simplifications on APPS logic
 
 # Streamlined Config UI
-- Code Upload (?)
 - Config Change/Upload to flash memory
-- Calibration Tool
+- Config file on client side to see what kind of parameters can be changed
+- Mechanism on the target machine to parse and read the parameters correctly
+- Calibration tool: host machine reading data from serial
 
 # Dashboard
 - Design a CAN Message received by: Dashboard + Data Aquisition Board
