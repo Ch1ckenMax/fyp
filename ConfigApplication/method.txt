@@ -1,6 +1,7 @@
 Function 1: Easy modification of parameters
 - Find a way for the host machine to write on the target machine's memory
-    - OpenOCD? STProgrammer?
+    - Allocate memory space for the config
+    - OpenOCD? STProgrammer? STLINK? https://www.youtube.com/watch?v=1cleO3mHjWw 
 - Host machine: YAML config file that matches with the parameters required by the target machine => upload to target machine with specific syntax => target machine reads upon restart
 - Target machine: parser that reads the parameters carefully at startup
 
@@ -12,3 +13,4 @@ Function 2: Calibration
 
 Function 3: Logging
 - Check the sVW logs in real time
+- https://github.com/robertlong13/SWO-Parser

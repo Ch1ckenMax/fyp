@@ -15,7 +15,7 @@
 - Design a CAN Message received by: Dashboard + Data Aquisition Board
 - Create UI for the dashboard
 
-# Data Analysis Tool
+# Data Analysis Tool (Nice to have)
 - csv -> graph
 - show brake/gas/other kinds of data on the graph
 - separate each by laptimes (checkbox to show laptimes. csv parsing)
