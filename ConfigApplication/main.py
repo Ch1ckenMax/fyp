@@ -1,4 +1,11 @@
-from src.stlinkinterface import VCUInterface
+from src.stlink_interface import VCUInterface
+from src.config_reader import ConfigReader
+
+# Constants
+CONFIG_PATH = ".\\config\\config.json"
+ST_LINK_EXE_PATH = ".\\externlib\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\"
+MEMORY_SIZE = 0x20000
+
 
 # Load Config
 
@@ -6,6 +13,6 @@ from src.stlinkinterface import VCUInterface
 
 # Check if ST-LINK exists in the env var
 
-vcuInterface = VCUInterface(0, 1)
+configReader = ConfigReader()
 
-print(vcuInterface.HasConnection())
+print(configReader.readConfig(CONFIG_PATH))

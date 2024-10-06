@@ -1,0 +1,148 @@
+{
+"version": "1.0.0",
+"fields": {
+    "spamLoggingEnabled":
+    {
+        "type": "bool",
+        "value": false,
+        "description": "Enable/Disable Spam Level Logs in the SVW Data Console" 
+    },
+    "infoLoggingEnabled":
+    {
+        "type": "bool",
+        "value": true,
+        "description": "Enable/Disable Info Level Logs in the SVW Data Console" 
+    },
+    "errorLoggingEnabled":
+    {
+        "type": "bool",
+        "value": true,
+        "description": "Enable/Disable Error Level Logs in the SVW Data Console" 
+    },
+    "customLoggingEnabled":
+    {
+        "type": "bool",
+        "value": false,
+        "description": "Enable/Disable Custom Level Logs in the SVW Data Console" 
+    },
+    "implausibleThresholdInterval":
+    {
+        "type": "uint32_t",
+        "value": 100,
+        "description": "Threshold in Time (in miliseconds) after which the VCU will enter the implausible state" 
+    },
+    "readyToDriveSoundDuration":
+    {
+        "type": "uint32_t",
+        "value": 1500,
+        "description": "The duration (in miliseconds) of ready to drive sound"
+    },
+    "readyToDriveTriggeringBrakeThreshold":
+    {
+        "type": "uint16_t",
+        "value": 10,
+        "description": "The percentage of braking needed to enter ready to drive mode"
+    },
+    "readyToDriveButtonPort":
+    {
+        "type": "GPIOPort",
+        "value": "C",
+        "description": "GPIO Port of ready to drive button"
+    },
+    "readyToDriveButtonPinNum":
+    {
+        "type": "GPIOPinNum",
+        "value": 7,
+        "description": "GPIO Pin Number of ready to drive button"
+    },
+    "readyToDriveSoundPort":
+    {
+        "type": "GPIOPort",
+        "value": "C",
+        "description": "GPIOPort of ready to drive sound buzzer"
+    },
+    "readyToDriveSoundPinNum":
+    {
+        "type": "GPIOPinNum",
+        "value": 1,
+        "description": "GPIO Pin Number of ready to drive sound buzzer"
+    },
+    "ThrottleMinPin0":
+    {
+        "type": "uint16_t",
+        "value": 580,
+        "description": "Minimum analog value of the first APPS"
+    },
+    "ThrottleMaxPin0":
+    {
+        "type": "uint16_t",
+        "value": 3225,
+        "description": "Maximum analog value of the first APPS"
+    },
+    "ThrottleMinPin1":
+    {
+        "type": "uint16_t",
+        "value": 1250,
+        "description": "Minimum analog value of the second APPS"
+    },
+    "ThrottleMaxPin1":
+    {
+        "type": "uint16_t",
+        "value": 3700,
+        "description": "Maximum analog value of the second APPS"
+    },
+    "MaxTorque":
+    {
+        "type": "uint16_t",
+        "value": 1660,
+        "description": "Maximum torque of the motor in the unit of 0.1 Nm (e.g. 1000 means 100 Nm of torque from the engine)"
+    },
+    "ThrottleSignalOutOfRangeThreshold":
+    {
+        "type": "uint16_t",
+        "value": 50,
+        "description": "Threshold for APPS to go out of range in analog value"
+    },
+    "SignalDeadzone":
+    {
+        "type": "uint16_t",
+        "value": 20,
+        "description": "Deadzone of the APPS in analog value"
+    },
+    "BrakeMinPin":
+    {
+        "type": "uint16_t",
+        "value": 300,
+        "description": "Minimum analog value of the brake sensor"
+    },
+    "BrakeMaxPin":
+    {
+        "type": "uint16_t",
+        "value": 1500,
+        "description": "Maximum analog value of the brake sensor"
+    },
+    "BrakeSignalOutOfRangeThreshold":
+    {
+        "type": "uint16_t",
+        "value": 100,
+        "description": "Threshold for the brake sensor to go out of range in analog value"
+    },
+    "RegenMinPin":
+    {
+        "type": "uint16_t",
+        "value": 400,
+        "description": "Minimum analog value of the regen sensor"
+    },
+    "RegenMaxPin":
+    {
+        "type": "uint16_t",
+        "value": 1600,
+        "description": "Maximum analog value of the regen sensor"
+    },
+    "MaxRegen":
+    {
+        "type": "uint16_t",
+        "value": 500,
+        "description": "Maximum regen to the motor in the unit of 0.1 Nm"
+    }
+}}    
