@@ -11,7 +11,7 @@ class VCUInterface:
         hasConnection = result.returncode == 0 and result.stdout[:7] == b"Found 1" and result.stderr == b""
         error = None if hasConnection else (result.stdout + result.stderr)
 
-        return (hasConnection, error)
+        return (hasConnection, str(error))
     
     def WriteToFlash(self, content: str, memoryAddress: int) -> tuple[bool, str]:
         # Bound checks

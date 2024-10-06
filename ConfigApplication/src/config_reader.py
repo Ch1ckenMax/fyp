@@ -13,6 +13,9 @@ class ConfigReader:
             "GPIOPort",
             "GPIOPinNum"}
     
+    def __init__(self, configPath: str):
+        self.configPath = configPath
+
     # Check if a number is valid.
     # returns (Result, Error Message)
     def __checkNumber(self, min: int, max: int, value: any) -> tuple[bool, str]:
@@ -64,10 +67,10 @@ class ConfigReader:
     
     # Accepts a file path
     # Returns a dictionary of fieldName to (fieldType, fieldValue, description). Otherwise, return None and the error message
-    def readConfigFile(self, configPath: str) -> tuple[Dict[str, tuple[str, Any, str]], str]:
+    def readConfigFile(self) -> tuple[Dict[str, tuple[str, Any, str]], str]:
         # Open the meta config file. If err, return err
         try:
-            configFile = open(configPath, "r")
+            configFile = open(self.configPath, "r")
         except OSError as error:
             return (None, "Error opening the meta config file. Info: " + repr(error))
         try:
