@@ -51,11 +51,16 @@ class ConfigReader:
             case "int32_t":
                 return self.__checkNumber(-2147483648, 2147483647, value)
             case "bool":
-                return isinstance(value, bool)
+                if isinstance(value, bool):
+                    return (True, None)
+                else:
+                    return (False, "value is not a bool")
             case "GPIOPort":
                 return self.__checkGPIOPort(value)
-            case "GPIOPinNumber":
+            case "GPIOPinNum":
                 return self.__checkNumber(1, 13, value)
+            case _:
+                return (False, "Type not found")
     
     # Accepts a file path
     # Returns a dictionary of fieldName to (fieldType, fieldValue, description). Otherwise, return None and the error message
@@ -81,31 +86,34 @@ class ConfigReader:
         if not fields:
             return (None, "The item \"field\" is not found in the json file.")
         
-        for field in fields:
+        for fieldName in fields:
+            field = fields[fieldName]
+
             # Check if field type is valid
             fieldType = field.get("type")
-            if not fieldType:
-                return (None, "Field type of " + field + " in the config not found")
+            if fieldType is None:
+                return (None, "Field type of " + fieldName + " in the config not found")
             
             if fieldType not in self.fieldTypes:
-                return (None, "Field type of " + field + " is invalid")
+                return (None, "Field type of " + fieldName + " is invalid")
             
             # Check if field value is vaild
             fieldValue = field.get("value")
-            if not fieldValue:
-                return (None, "Field value of " + field + " in the config not found")
-            
+            if fieldValue is None:
+                return (None, "Field value of " + fieldName + " in the config not found")
+
             (result, errorMessage) = self.__checkField(fieldType, fieldValue)
-            if not result:
-                return (None, "Field value of " + field + " is out of range. Info: " + errorMessage)
+
+            if result is None:
+                return (None, "Field value of " + fieldName + " is out of range. Info: " + errorMessage)
             
             # Check if field description is valid
             fieldDescription = field.get("description")
-            if not fieldDescription:
+            if fieldDescription is None:
                 return (None, "Field description of " + field + " in the config not found")
 
             # Add the pair to the config dictionary
-            key = field
+            key = fieldName
             value = (fieldType, fieldValue, fieldDescription)
             config[key] = value
 
@@ -120,4 +128,4 @@ class ConfigReader:
 
         return json.dumps(rawConfigDict)
     
-    
+

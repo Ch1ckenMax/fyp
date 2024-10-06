@@ -15,4 +15,5 @@ MEMORY_SIZE = 0x20000
 
 configReader = ConfigReader()
 
-print(configReader.readConfig(CONFIG_PATH))
+(dick, errorMsg) = configReader.readConfigFile(CONFIG_PATH)
+print(configReader.TurnConfigDictToRawConfigJson(dick))
