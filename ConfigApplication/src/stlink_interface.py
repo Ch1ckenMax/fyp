@@ -1,9 +1,10 @@
 import subprocess
 
 class VCUInterface:
-    def __init__(self, STLinkExecutablePath: str, memorySize: int):
+    def __init__(self, STLinkExecutablePath: str, memorySize: int, memoryStartAddress: int):
         self.STLinkExecutablePath = STLinkExecutablePath
-        self:memorySize = memorySize
+        self.memorySize = memorySize
+        self.memoryStartAddress = memoryStartAddress
     
     def HasConnection(self) -> tuple[bool, str]:
         result = subprocess.run([self.STLinkExecutablePath + "st-info.exe", "--probe"], capture_output = True)
@@ -13,31 +14,35 @@ class VCUInterface:
 
         return (hasConnection, str(error))
     
-    def WriteToFlash(self, content: str, memoryAddress: int) -> tuple[bool, str]:
+    # Return (True, None) if success
+    # Return (False, errorMessageString) if fail
+    def WriteToFlash(self, content: str, memoryAddress: int, binaryTempFilePath: str) -> tuple[bool, str]:
         # Bound checks
-        if memoryAddress < self.flashMinAddress or memoryAddress >= self.flashMaxAddress:
+        if memoryAddress < self.memoryStartAddress or memoryAddress >= self.memoryStartAddress + self.memorySize:
             return (False, "Memory address is out of bound. Please raise to developers.")
         
         try:
-            binary = content.encode("ascii")
+            binary = (content + '\0').encode("ascii") # Add a null character at the end to indicate end of string
         except UnicodeEncodeError as error:
             return (False, "Error encoding the content to ascii. Info: " + repr(error))
         
+        # Size check
+        if len(binary) > self.memorySize:
+            return (False, "Config size is more than allowed. Allowed size: ", self.memorySize, ", Config size: ", len(binary))
         
-        
-        # Open file
+        # Open a file
         try:
-            binaryTempFile = open("tempconfig.bin", "wxb")
-        except IOError as error:
-            return (False, "Failed to create a temporary file. Please run the program as an adminstrator. Info: " + error.strerror)
-        except:
-            return (False, "Failed to create a temporary file. Please run the program as an adminstrator.")
-
-        # Check if you can read the file
-
-        # If the file can be read, check if the file is larger than the max flash
+            binaryTempFile = open(binaryTempFilePath, "wb")
+        except Exception as error:
+            return (False, "Failed to create a temporary file. Please run the program as an adminstrator. Info: ", error)
         
-        # If write success, 0 is returned. Else, 1 is returned.
+        binaryTempFile.write(binary)
+        binaryTempFile.close()
 
-        return (True, "")
+        result = subprocess.run([self.STLinkExecutablePath + "st-flash.exe", "write", binaryTempFilePath, hex(memoryAddress)], capture_output = True)
+
+        if result.returncode == 0: # Success
+            return (True, None)
+        else:
+            return (False, "Failed to flash the config to memory. Info: " + str(result.stdout + result.stderr))
         
