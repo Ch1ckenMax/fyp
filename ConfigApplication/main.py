@@ -16,7 +16,6 @@ content = "what is the buffer of this? ASSHOLE!"
 # print(vcuInterface.WriteToFlash(content, MEMORY_START_ADDRESS + 0x400, TEMP_BUFFER_PATH))
 
 gui = GUI(configReader, vcuInterface)
-gui.initElements()
 gui.startGUILoop()
 
 # Load Config
