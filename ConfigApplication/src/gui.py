@@ -7,10 +7,19 @@ class GUI:
                 configReader,
                 stlinkInterface):
         # Configure the root
+        customtkinter.set_appearance_mode("dark")
         self.root = customtkinter.CTk()
         self.root.title("HKU Racing VCU Config Modifier")
-        self.root.geometry("800x600")
-        self.root.configure(background = "grey")
+        self.root.geometry("1200x800")
+        self.root.resizable(False, False)
+
+        # Configure the tabs
+        tabview = customtkinter.CTkTabview(master = self.root)
+        tabview.pack(fill = "both", expand = True)
+
+        self.configModifierTab = tabview.add("Config Modifier")
+        self.calibratorTab = tabview.add("Calibrator")
+        tabview._segmented_button.grid(sticky="W")
 
         # Configure the variables
         self.configReader = configReader
@@ -46,15 +55,15 @@ class GUI:
 
     def initElements(self): 
         # Button for checking connection
-        hasConnectionButton = tk.Button(self.root, text="Check connection to STM32 board", command=self.__hasConnectionUIFunc)
-        hasConnectionButton.pack(pady = 10)
-
+        hasConnectionButton = customtkinter.CTkButton(self.configModifierTab, text="Check connection to STM32 board", command=self.__hasConnectionUIFunc)
+        hasConnectionButton.grid(row = 0, column = 1, pady = 10)
+        
         # Button for reading config
-        readConfigButton = tk.Button(self.root, text="Read Config", command=self.__readConfigUIFunc)
-        readConfigButton.pack(pady = 10)
+        readConfigButton = customtkinter.CTkButton(self.configModifierTab, text="Read Config", command=self.__readConfigUIFunc)
+        readConfigButton.grid(row = 1, column = 1, pady = 10)
 
-        writeToFlashButton = tk.Button(self.root, text="Write to Flash", command=self.__writeToFlashUIFunc)
-        writeToFlashButton.pack(pady = 10)
+        writeToFlashButton = customtkinter.CTkButton(self.configModifierTab, text="Write to Flash", command=self.__writeToFlashUIFunc)
+        writeToFlashButton.grid(row = 2, column = 1, pady = 10)
     
     def startGUILoop(self):
         self.root.mainloop()
