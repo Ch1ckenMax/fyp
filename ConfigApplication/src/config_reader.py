@@ -1,6 +1,8 @@
 from typing import Set, Dict, Any
 import json
 
+from src.utils import checkTypeValidity
+
 class ConfigReader:
     fieldTypes: Set[str] = {"uint8_t", 
             "uint8_t",
@@ -15,55 +17,6 @@ class ConfigReader:
     
     def __init__(self, configPath: str):
         self.configPath = configPath
-
-    # Check if a number is valid.
-    # returns (Result, Error Message)
-    def __checkNumber(self, min: int, max: int, value: any) -> tuple[bool, str]:
-        if not isinstance(value, int):
-            return (False, "value is not a number")
-        if value >= min and value <= max:
-            return (True, None)
-        else:
-            return (False, "value is out of range")
-    
-    # Check if a GPIO port is valid.
-    # returns (Result, Error Message)
-    def __checkGPIOPort(self, value: any) -> tuple[bool, str]:
-        if not isinstance(value, str):
-            return (False, "value is not a string")
-        if len(value) != 1:
-            return (False, "value is not a character (i.e. string length is not one)")
-        if value not in "ABCD":
-            return (False, "Invalid GPIO Port")
-        return (True, None)
-
-    # Check if a field is valid.
-    # returns (Result, Error Message)
-    def __checkField(self, type: str, value: any) -> tuple[bool, str]:
-        match type:
-            case "uint8_t":
-                return self.__checkNumber(0, 255, value)
-            case "uint16_t":
-                return self.__checkNumber(0, 65535, value)
-            case "uint32_t":
-                return self.__checkNumber(0, 4294967295, value)
-            case "int8_t":
-                return self.__checkNumber(-128, 127, value)
-            case "int16_t":
-                return self.__checkNumber(-32768, 32767, value)
-            case "int32_t":
-                return self.__checkNumber(-2147483648, 2147483647, value)
-            case "bool":
-                if isinstance(value, bool):
-                    return (True, None)
-                else:
-                    return (False, "value is not a bool")
-            case "GPIOPort":
-                return self.__checkGPIOPort(value)
-            case "GPIOPinNum":
-                return self.__checkNumber(1, 13, value)
-            case _:
-                return (False, "Type not found")
     
     # Accepts a file path
     # Returns a dictionary of fieldName to (fieldType, fieldValue, description). Otherwise, return None and the error message
@@ -85,6 +38,12 @@ class ConfigReader:
     def readConfigJson(self, configJson) -> tuple[Dict[str, tuple[str, Any, str]], str]:
         config = dict()
         
+        version = configJson.get("version")
+        if not version:
+            return (None, "Config version is not found in the json file.")
+        
+        config["version"] = str(version)
+        
         fields = configJson.get("fields")
         if not fields:
             return (None, "The item \"field\" is not found in the json file.")
@@ -105,7 +64,7 @@ class ConfigReader:
             if fieldValue is None:
                 return (None, "Field value of " + fieldName + " in the config not found")
 
-            (result, errorMessage) = self.__checkField(fieldType, fieldValue)
+            (result, errorMessage) = checkTypeValidity(fieldType, fieldValue)
 
             if result is None:
                 return (None, "Field value of " + fieldName + " is out of range. Info: " + errorMessage)
@@ -126,8 +85,11 @@ class ConfigReader:
     def TurnConfigDictToRawConfigJson(self, configDict: Dict[str, tuple[str, Any, str]]) -> str:
         rawConfigDict = dict()
         for fieldName in configDict:
-            (_, fieldValue, _) = configDict[fieldName]
-            rawConfigDict[fieldName] = fieldValue
+            if fieldName == "version":
+                rawConfigDict[fieldName] = configDict["version"]
+            else:
+                (_, fieldValue, _) = configDict[fieldName]
+                rawConfigDict[fieldName] = fieldValue
 
         return json.dumps(rawConfigDict)
     

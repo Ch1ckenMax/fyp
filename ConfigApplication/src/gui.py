@@ -1,10 +1,11 @@
 import customtkinter
-from src.config_modifier_frame_gui import ConfigModifierFrame
+from src.gui_config_modifier_frame import ConfigModifierFrame
 
 class GUI:
     def __init__(self,
                 configReader,
-                stlinkInterface):
+                stlinkInterface,
+                write_to_flash_memory_address):
         # Configure the root
         customtkinter.set_appearance_mode("dark")
         self.root = customtkinter.CTk()
@@ -21,7 +22,7 @@ class GUI:
         tabview._segmented_button.grid(sticky="W")
 
         # Add Frame to Tab
-        configModFrame = ConfigModifierFrame(configModifierTab, configReader, stlinkInterface)
+        configModFrame = ConfigModifierFrame(configModifierTab, configReader, stlinkInterface, write_to_flash_memory_address)
         configModFrame.pack(fill = "both", expand = True)
     
     def startGUILoop(self):
