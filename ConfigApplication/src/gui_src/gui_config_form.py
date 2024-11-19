@@ -55,7 +55,7 @@ class ConfigFormFrame(customtkinter.CTkScrollableFrame):
         # Add the version back to the dict
         config_dict["version"] = self.config_version
 
-    # Return (Value only config json, Error Message)
+    # Return (Value only config json from the form, Error Message)
     def getValueOnlyConfigJson(self) -> tuple[dict[str, any], str]:
         new_config_dict = dict()
         new_config_dict["version"] = self.config_version
@@ -229,3 +229,6 @@ class ConfigFormVersionRowFrame(customtkinter.CTkFrame):
                                                         font = customtkinter.CTkFont(weight = "bold"))
         self.field_name_widget.grid(row = 0, column = 2)
     
+# TODO: create some functions for the calibrator to change the fields.
+# The rows should be tracked in a dict instead of a list.
+# Each row should have a function to change its own value.
