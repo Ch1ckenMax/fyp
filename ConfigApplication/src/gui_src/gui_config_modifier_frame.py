@@ -1,9 +1,9 @@
 from tkinter import messagebox
 import customtkinter
 
-from src.gui_config_form import ConfigFormFrame
-from src.gui_config_button_vcu import ConfigVCUButtonFrame
-from src.gui_config_form_control import ConfigFormControlFrame
+from src.gui_src.gui_config_form import ConfigFormFrame
+from src.gui_src.gui_config_button_vcu import ConfigVCUButtonFrame
+from src.gui_src.gui_config_form_control import ConfigFormControlFrame
 
 CONFIG_FORM_HEIGHT = 700
 

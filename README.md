@@ -14,6 +14,9 @@
 - `python3 -m pip install -r requirements.txt`
 - Flashing with cubeide will flash away all memory, but with stlink it wont?
 - Don't connect stm32 with more than 1 software
+- STM32CubeCLT1.16.0
+- https://www.codeproject.com/Articles/16163/Real-Time-Console-Output-Redirection
+- https://stackoverflow.com/questions/50315088/how-to-limit-the-buffer-size-of-a-pipe-windows
 
 # Dashboard
 - Design a CAN Message received by: Dashboard + Data Aquisition Board

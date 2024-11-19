@@ -32,7 +32,10 @@ class ConfigVCUButtonFrame(customtkinter.CTkFrame):
         if result:
             messagebox.showinfo(title = "Connection", message = "There is connection with exactly one STM32 board.")
         else:
-            messagebox.showinfo(title = "Connection", message = "STM32 board not found. Error Info: " + errorMessage)
+            messagebox.showinfo(title = "Connection", 
+                message = "STM32 board not found.\n\nError Info: " + 
+                errorMessage + 
+                ".\n\nMake sure that no other program is connected to STM32 (including the Log Viewer in this program).")
 
     def __writeToFlashUIFunc(self):
         (value_only_dict, error_message) = self.parent.config_form.getValueOnlyConfigJson()
@@ -47,7 +50,10 @@ class ConfigVCUButtonFrame(customtkinter.CTkFrame):
         if result:
             messagebox.showinfo(title = "Write to Flash", message = "Write Success!")
         else:
-            messagebox.showinfo(title = "Write to Flash", message = "Write Failed. Error Info: " + error_message)
+            messagebox.showinfo(title = "Write to Flash", 
+                message = "Write Failed.\n\nError Info: " + 
+                error_message + 
+                ".\n\nMake sure that no other program is connected to STM32 (including the Log Viewer in this program).")
 
     def disableWriteToFlashButton(self):
         self.write_to_flash_button.configure(fg_color = "grey25", state = "disabled")
