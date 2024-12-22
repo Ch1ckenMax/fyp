@@ -1,6 +1,7 @@
 from tkinter import messagebox
 import customtkinter
 from customtkinter import ThemeManager
+import json
 
 BUTTON_WIDTH = 200
 
@@ -40,12 +41,13 @@ class ConfigVCUButtonFrame(customtkinter.CTkFrame):
     def __writeToFlashUIFunc(self):
         (value_only_dict, error_message) = self.parent.config_form.getValueOnlyConfigJson()
 
-        print(value_only_dict)
         if value_only_dict is None:
             messagebox.showinfo(title = "Write to Flash", message = "The config in the config form is invalid. Please check the values: \n " + error_message)
             return
 
-        (result, error_message) = self.parent.stlinkInterface.WriteToFlash(str(value_only_dict), self.parent.write_flash_memory_address, ".\\tempbuf.bin")
+        rawJson = json.dumps(value_only_dict)
+        print(rawJson)
+        (result, error_message) = self.parent.stlinkInterface.WriteToFlash(rawJson, self.parent.write_flash_memory_address, ".\\tempbuf.bin")
 
         if result:
             messagebox.showinfo(title = "Write to Flash", message = "Write Success!")

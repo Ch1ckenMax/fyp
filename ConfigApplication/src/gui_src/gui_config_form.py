@@ -163,8 +163,12 @@ class ConfigFormBoolRowFrame(AbstractConfigFormRowFrame):
         return input_field
     
         # Get the value from the input field
-    def getRawInputFieldValue(self) -> any:
-        return self.input_field_widget.get()
+    def getRawInputFieldValue(self) -> bool:
+        value = self.input_field_widget.get()
+        if value == 1:
+            return True
+        else:
+            return False
     
     def getValidInputFieldValue(self) -> tuple[bool, any]:
         return (True, self.getRawInputFieldValue())

@@ -81,16 +81,4 @@ class ConfigReader:
 
         return (config, None)
     
-    # Given a dictionary of fieldName to (fieldType, fieldValue, description), return a Json string of raw config (i.e. key-value pair of fieldName to fieldValue)
-    def TurnConfigDictToRawConfigJson(self, configDict: Dict[str, tuple[str, Any, str]]) -> str:
-        rawConfigDict = dict()
-        for fieldName in configDict:
-            if fieldName == "version":
-                rawConfigDict[fieldName] = configDict["version"]
-            else:
-                (_, fieldValue, _) = configDict[fieldName]
-                rawConfigDict[fieldName] = fieldValue
-
-        return json.dumps(rawConfigDict)
-    
 
