@@ -103,6 +103,12 @@
         "value": 50,
         "description": "Threshold for APPS to go out of range in analog value"
     },
+    "ThrottleSignalDeviationThreshold":
+    {
+        "type": "uint16_t",
+        "value": 10,
+        "description": "Threshold for APPS's deviation to be considered as implausible in analog value"
+    },
     "SignalDeadzone":
     {
         "type": "uint16_t",
@@ -126,6 +132,12 @@
         "type": "uint16_t",
         "value": 100,
         "description": "Threshold for the brake sensor to go out of range in analog value"
+    },
+    "MaxBrake":
+    {
+        "type": "uint16_t",
+        "value": 500,
+        "description": "Maximum brake force"
     },
     "RegenMinPin":
     {
