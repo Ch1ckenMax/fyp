@@ -57,7 +57,7 @@ class VCUInterface:
         if result.returncode == 0: # Success
             return (True, None)
         else:
-            return (False, "Failed to flash the config to memory. Info: " + str(result.stdout + result.stderr).encode("utf-8"))
+            return (False, str("Failed to flash the config to memory. Info: ") + str(result.stdout) + str(result.stderr))
     
     # Start a SWV Log Reader process and return its stdout and stderr
     def StartSWVLogReaderProcess(self) -> any:
