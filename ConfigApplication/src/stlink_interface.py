@@ -20,7 +20,10 @@ class VCUInterface:
         self.swv_log_reader_process_pid = None
     
     def HasConnection(self) -> tuple[bool, str]:
-        result = subprocess.run([self.st_link_executable_path + "st-info.exe", "--probe"], capture_output = True)
+        try:
+            result = subprocess.run([self.st_link_executable_path + "st-info.exe", "--probe"], capture_output = True, timeout = 1)
+        except subprocess.TimeoutExpired as error:
+            return (False, "Timed out.")
         
         has_connection = result.returncode == 0 and result.stdout[:7] == b"Found 1" and result.stderr == b""
         error = None if has_connection else (result.stdout + result.stderr)
@@ -80,6 +83,7 @@ class VCUInterface:
             return None
         
         self.swv_log_reader_process_pid = swv_log_reader_process.pid
+        print("Process pid: ", self.swv_log_reader_process_pid)
         return swv_log_reader_process.stdout
     
     def StopSWVLogReaderProcess(self):
@@ -90,11 +94,21 @@ class VCUInterface:
         # The subprocess module is too stupid to separate code for windows machine.
         # CTRL C event also does not work as it will propagate from the child process to the parent process
         # and kill the GUI altogether.
-        # The only viable way is:
+        # The only viable approaches are to:
+        # 1. Use taskkill. However this method is flaky (does not work 100% time). Advantage is that if it works, it is killed instantly.
+        # 2. Use wmic process where. It kills process by name, always works. Disadvantage is that it takes some time.
+        # Hence, we adopt both approaches.
         try:
             subprocess.call(['taskkill', '/F', '/T', '/PID',  str(self.swv_log_reader_process_pid)])
         except Exception as error:
+            print("DEBUG: task kill error")
             print(repr(error))
+
+        try:
+            # The nuclear option. In case it doesn't go down after taskkill:
+            subprocess.run(['wmic', 'process', 'where', 'name = \"STM32_Programmer_CLI.exe\"', 'delete']) 
+        except Exception as error: # If the above taskkill was sucessful, the exception will happen (FileNotFoundError)
+            print("wmic nuke was no-op: ", error)
         
         self.swv_log_reader_process_pid = None
 
