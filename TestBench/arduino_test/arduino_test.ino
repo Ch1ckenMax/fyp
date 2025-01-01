@@ -75,14 +75,12 @@ private:
 
 void PrintFrequency() const
 {
-    Serial.print("Frequency: ");
     Serial.print(m_receive_count / ((float)INTERVAL/ 1000));
-    Serial.println();
+    Serial.print(' ');
 }
 
 void PrintAverageLatency(const unsigned long average_latency) const
 {
-    Serial.print("Average latency: ");
     Serial.print(average_latency);
     Serial.println();
 }
@@ -170,7 +168,7 @@ uint32_t m_last_check;
 unsigned char buf[8]; // Garbage value is okay. we won't need to transmit meaningful data.
 };
 
-const uint32_t PONG_CAN_ID = 0x0BF;
+const uint32_t PONG_CAN_ID = 0x0D0;
 const uint32_t flood_interval_ms = 1;
 const unsigned int flood_messages_per_interval = 0;
 
@@ -202,8 +200,7 @@ void loop()
     if (canMsgRxBlackhole.VCUCommandMessageReceived())
     {
         performanceMonitor.AddCount(1);
-        performanceMonitor.RecordReceiveTime(current_time);
-    }
+        performanceMonitor.RecordReceiveTime(current_time);   }
     
     performanceMonitor.Print(current_time);
     canMsgTxHelper.Transmit(current_time);
