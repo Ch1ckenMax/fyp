@@ -65,7 +65,7 @@ class VCUInterface:
     # Start a SWV Log Reader process and return its stdout and stderr
     def StartSWVLogReaderProcess(self) -> any:
         try:
-            swv_log_reader_process = subprocess.Popen([self.rt_console,
+            swv_log_reader_process = subprocess.Popen([
                             self.st_programmer_executable,
                             "-c", 
                             "port=swd", 
@@ -74,10 +74,9 @@ class VCUInterface:
                             "portnumber=0", "-RA"],
                             text = True,
                             bufsize = 1,
-                            universal_newlines = True,
-                            shell = True,
+                            stdin = subprocess.DEVNULL,
                             stdout = subprocess.PIPE,
-                            stdin = subprocess.PIPE)
+                            stderr = subprocess.STDOUT)
         except Exception as error:
             print(repr(error))
             return None
