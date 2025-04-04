@@ -54,29 +54,81 @@ class ConfigFormFrame(customtkinter.CTkScrollableFrame):
         
         # Add the version back to the dict
         config_dict["version"] = self.config_version
+        
+    # Returns full config json from the form
+    def getFullConfigJson(self) -> tuple[dict[str, any], str]:
+        error_message = self.__updateConfigDictFromForm()
+        
+        if error_message:
+            return (None, error_message)
+        
+        # Make a clone
+        config_dict = dict(self.config_dict)
+        
+        # Remove the version from the fields
+        config_dict.pop("version", None)
+        
+        # Add the items name back
+        for name in config_dict:
+            (field_type, field_value, field_description) = config_dict[name]
+            field_dict = {"type": field_type, "value": field_value, "description": field_description}
+            config_dict[name] = field_dict
+        
+        full_config_dict = {"version": self.config_version, "fields": config_dict}
+        return (full_config_dict, None)
 
     # Return (Value only config json from the form, Error Message)
     def getValueOnlyConfigJson(self) -> tuple[dict[str, any], str]:
+        error_message = self.__updateConfigDictFromForm()
+        
+        if error_message:
+            return (None, error_message)
+        
         new_config_dict = dict()
         new_config_dict["version"] = self.config_version
         failed = False
         fail_message = ""
 
+        for name in self.config_dict:
+            # Skip the version and add it later
+            if name == "version":
+                continue 
+            
+            (_, value, _) = self.config_dict[name]
+            new_config_dict[name] = value
+            
+        new_config_dict["version"] = self.config_version
+        
+        return (new_config_dict, None)
+        
+    # Updates the config dict with the current input in the form
+    # Fails if the input is not valid
+    def __updateConfigDictFromForm(self) -> str:
+        new_config_dict = dict()
+        new_config_dict["version"] = self.config_version
+        
+        failed = False
+        fail_message = ""
+        
         for field_widget in self.field_widget_list:
             (success, dict_or_error_message) = field_widget.getValidInputFieldValue()
 
             if success and not failed:
-                new_config_dict[field_widget.name] = dict_or_error_message
+                (field_type, _, description) = self.config_dict[field_widget.name]
+                new_config_dict[field_widget.name] = (field_type, dict_or_error_message, description)
             elif success and failed:
                 pass # noop. Do nothing.
             elif not success:
                 failed = True
                 fail_message = fail_message + dict_or_error_message + '\n'
-        
+                
         if not failed:
-            return (new_config_dict, None)
+            self.config_dict = new_config_dict
+            # print("Updated config dict: " + str(self.config_dict))
+            return None
         else:
-            return (None, fail_message)
+            return fail_message
+        
                 
 # Abstract class. Do NOT make an instance with this class.
 class AbstractConfigFormRowFrame(customtkinter.CTkFrame):

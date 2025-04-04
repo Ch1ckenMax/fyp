@@ -35,6 +35,7 @@ class ConfigModifierFrame(customtkinter.CTkFrame):
         # Config Form Control Frame
         self.config_form_control = ConfigFormControlFrame(self)
         self.config_form_control.grid(row = 1, column = 1, padx = 5, pady = 2, sticky = "news")
+        self.config_form_control.disableSaveConfigButton()
         
         # Configure the variables
         self.configReader = configReader
@@ -52,6 +53,7 @@ class ConfigModifierFrame(customtkinter.CTkFrame):
         self.config_form = ConfigFormFrame(self, configDict, label_text = "Config Form", height = CONFIG_FORM_HEIGHT)
         self.config_form.grid(row = 0, column = 0, rowspan = 2, padx = 5, pady = 5, sticky = "news")
 
-        # Enable the write to flash button
+        # Enable the write to flash and save to config button
         self.config_vcu_button.enableWriteToFlashButton()
+        self.config_form_control.enableSaveConfigButton()
 

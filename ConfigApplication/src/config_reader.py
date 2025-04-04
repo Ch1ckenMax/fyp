@@ -19,11 +19,18 @@ class ConfigReader:
         self.configPath = configPath
     
     # Accepts a file path
+    # user_config_path is optional. If it is None, the config from the default config path will be read. 
     # Returns a dictionary of fieldName to (fieldType, fieldValue, description). Otherwise, return None and the error message
-    def readConfigFile(self) -> tuple[Dict[str, tuple[str, Any, str]], str]:
+    def readConfigFile(self, user_config_path) -> tuple[Dict[str, tuple[str, Any, str]], str]:
+        config_path = self.configPath
+        
+        # Use user config path if it exists
+        if user_config_path is not None:
+            config_path = user_config_path
+        
         # Open the meta config file. If err, return err
         try:
-            configFile = open(self.configPath, "r")
+            configFile = open(config_path, "r")
         except OSError as error:
             return (None, "Error opening the meta config file. Info: " + repr(error))
         try:
