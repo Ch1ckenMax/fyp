@@ -1,6 +1,7 @@
 import customtkinter
 from threading import Thread
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
+from datetime import datetime
 
 LOG_TEXT_BOX_HEIGHT = 700
 BUTTON_WIDTH = 100
@@ -22,7 +23,7 @@ class LogViewerFrame(customtkinter.CTkFrame):
         self.log_text_box = customtkinter.CTkTextbox(self, height = LOG_TEXT_BOX_HEIGHT)
         self.log_text_box.insert("0.0", "Please click the connect button to start the program and read from the logs.\n")
         self.log_text_box.configure(state = "disabled")
-        self.log_text_box.grid(row = 0, column = 0, rowspan = 2, padx = 5, pady = 5, sticky = "news")
+        self.log_text_box.grid(row = 0, column = 0, rowspan = 3, padx = 5, pady = 5, sticky = "news")
 
         # Buttons
         self.start_log_button = customtkinter.CTkButton(self, text="Start/Restart Program", command=self.__readLogs, width = BUTTON_WIDTH)
@@ -30,6 +31,9 @@ class LogViewerFrame(customtkinter.CTkFrame):
 
         self.stop_log_button = customtkinter.CTkButton(self, text="Stop Logging", command=self.__stopLogs, width = BUTTON_WIDTH)
         self.stop_log_button.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = "new")
+        
+        self.stop_log_button = customtkinter.CTkButton(self, text="Save Log to Text File", command=self.__saveLogToFile, width = BUTTON_WIDTH)
+        self.stop_log_button.grid(row = 2, column = 1, padx = 5, pady = 5, sticky = "new")
 
         # Destructor
         self.bind("<Destroy>", self.on_destroy)
@@ -82,6 +86,27 @@ class LogViewerFrame(customtkinter.CTkFrame):
         self.log_reader_thread.join(timeout = 0.5)
         print(self.log_reader_thread.is_alive)
         self.log_reader_thread = None
+
+    def __saveLogToFile(self):
+        # Generate current time as the default text file name
+        current_time = datetime.now().strftime("vcu_log_%Y-%d-%m-%H_%M_%S")
+        print(current_time)
+        
+        # Open a file dialog to choose the save location
+        file_path = filedialog.asksaveasfilename(initialfile=current_time, 
+                defaultextension=".txt", 
+                filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
+
+        if file_path is None:
+            return # No path is selected
+            
+        try:
+            file = open(file_path, 'w')
+            log = self.log_text_box.get("1.0", "end-1c")
+            file.write(log)
+            file.close()
+        except Exception as error:
+            messagebox.showinfo(title = "Error", message = "Failed to save log to file. Error:" + str(error))
     
     # Destructor to clean up the STM32CubeProgrammer process
     # In case the user closes the program without stopping the logs
