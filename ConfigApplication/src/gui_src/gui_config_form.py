@@ -48,6 +48,16 @@ class ConfigFormFrame(customtkinter.CTkScrollableFrame):
                     new_row_frame = ConfigFormGPIOPinNumRowFrame(self, config_dict, name, height = 2)
                 case _:
                     raise Exception("Encountered unknown type when creating a row in config form. Please raise to developers. type: " + field_type)
+                
+            # Some references for easy access
+            if name == "ThrottleMinPin0":
+                self.throttle_min_pin0_widget = new_row_frame
+            if name == "ThrottleMinPin1":
+                self.throttle_min_pin1_widget = new_row_frame
+            if name == "ThrottleMaxPin0":
+                self.throttle_max_pin0_widget = new_row_frame
+            if name == "ThrottleMaxPin1":
+                self.throttle_max_pin1_widget = new_row_frame
             
             self.field_widget_list.append(new_row_frame)
             self.field_widget_list[index].grid(row = index + 1, column = 0, padx = 2, pady = 2, sticky = "W")
@@ -100,7 +110,33 @@ class ConfigFormFrame(customtkinter.CTkScrollableFrame):
         new_config_dict["version"] = self.config_version
         
         return (new_config_dict, None)
+    
+    # Attempt to Update the Minimum APPS value in the form
+    # Note: this does not update the config dict, and it has to be commited
+    # Return error message if any
+    def updateAPPSMinValueInForm(self, throttle_min_pin0, throttle_min_pin1) -> str:
+        # APPS only supports range from 0 to 4096
+        if not self.__isAppsValueValid(throttle_min_pin0):
+            return "APPS1 value must be an integer between 0 and 4095. Given value: " + str(throttle_min_pin0)
+        if not self.__isAppsValueValid(throttle_min_pin1):
+            return "APPS2 value must be an integer between 0 and 4095. Given value: " + str(throttle_min_pin1)
+
+        self.throttle_min_pin0_widget.updateInputFieldValue(throttle_min_pin0)
+        self.throttle_min_pin1_widget.updateInputFieldValue(throttle_min_pin1)
         
+    # Attempt to Update the Maximum APPS value in the form
+    # Note: this does not update the config dict, and it has to be commited
+    # Return error message if any
+    def updateAPPSMaxValueInForm(self, throttle_max_pin0, throttle_max_pin1) -> str:
+        # APPS only supports range from 0 to 4096
+        if not self.__isAppsValueValid(throttle_max_pin0):
+            return "APPS1 value must be an integer between 0 and 4095. Given value: " + str(throttle_max_pin0)
+        if not self.__isAppsValueValid(throttle_max_pin1):
+            return "APPS2 value must be an integer between 0 and 4095. Given value: " + str(throttle_max_pin1)
+
+        self.throttle_max_pin0_widget.updateInputFieldValue(throttle_max_pin0)
+        self.throttle_max_pin1_widget.updateInputFieldValue(throttle_max_pin1)
+    
     # Updates the config dict with the current input in the form
     # Fails if the input is not valid
     def __updateConfigDictFromForm(self) -> str:
@@ -129,6 +165,8 @@ class ConfigFormFrame(customtkinter.CTkScrollableFrame):
         else:
             return fail_message
         
+    def __isAppsValueValid(self, value):
+        return value >= 0 and value <= 4095
                 
 # Abstract class. Do NOT make an instance with this class.
 class AbstractConfigFormRowFrame(customtkinter.CTkFrame):
@@ -169,6 +207,9 @@ class AbstractConfigFormRowFrame(customtkinter.CTkFrame):
     def getRawInputFieldValue(self) -> any:
         raise Exception("Please implement getRawInputFieldValue")
     
+    def updateInputFieldValue(self, value):
+        raise Exception("Please implement updateInputFieldValue")
+    
     def getValidInputFieldValue(self) -> tuple[bool, any]:
         raise Exception("Please implement getValidInputFieldValue")
     
@@ -185,6 +226,10 @@ class ConfigFormNumberRowFrame(AbstractConfigFormRowFrame):
         # Get the value from the input field
     def getRawInputFieldValue(self) -> any:
         return self.input_field_widget.get()
+    
+    def updateInputFieldValue(self, value):
+        self.input_field_widget.delete(0, 'end')
+        self.input_field_widget.insert(0, str(value))
     
     # Get the valid input field value
     # Returns (Success, Value | Error Message)

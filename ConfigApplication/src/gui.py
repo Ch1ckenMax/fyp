@@ -1,5 +1,6 @@
 import customtkinter
 from src.gui_src.gui_config_modifier_frame import ConfigModifierFrame
+from src.gui_src.gui_calibrator_frame import CalibratorFrame
 from src.gui_src.gui_log_viewer import LogViewerFrame
 
 class GUI:
@@ -29,6 +30,9 @@ class GUI:
 
         logViewerFrame = LogViewerFrame(logViewerTab, stlinkInterface)
         logViewerFrame.pack(fill = "both", expand = True)
+        
+        calibratorFrame = CalibratorFrame(calibratorTab, configModFrame, logViewerFrame)
+        calibratorFrame.pack(fill = "both", expand = True)
     
     def startGUILoop(self):
         self.root.mainloop()
