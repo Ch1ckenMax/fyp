@@ -34,7 +34,7 @@ class ConfigModifierFrame(customtkinter.CTkFrame):
 
         # Config Form Control Frame
         self.config_form_control = ConfigFormControlFrame(self)
-        self.config_form_control.grid(row = 1, column = 1, padx = 5, pady = 2, sticky = "news")
+        self.config_form_control.grid(row = 1, column = 1, padx = 5, pady = 2, sticky = "new")
         self.config_form_control.disableSaveConfigButton()
         
         # Configure the variables

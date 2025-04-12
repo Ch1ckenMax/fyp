@@ -58,6 +58,14 @@ class ConfigFormFrame(customtkinter.CTkScrollableFrame):
                 self.throttle_max_pin0_widget = new_row_frame
             if name == "ThrottleMaxPin1":
                 self.throttle_max_pin1_widget = new_row_frame
+            if name == "BrakeMinPin":
+                self.brake_min_pin_widget = new_row_frame
+            if name == "BrakeMaxPin":
+                self.brake_max_pin_widget = new_row_frame
+            if name == "RegenMinPin":
+                self.regen_min_pin_widget = new_row_frame
+            if name == "RegenMaxPin":
+                self.regen_max_pin_widget = new_row_frame
             
             self.field_widget_list.append(new_row_frame)
             self.field_widget_list[index].grid(row = index + 1, column = 0, padx = 2, pady = 2, sticky = "W")
@@ -136,6 +144,46 @@ class ConfigFormFrame(customtkinter.CTkScrollableFrame):
 
         self.throttle_max_pin0_widget.updateInputFieldValue(throttle_max_pin0)
         self.throttle_max_pin1_widget.updateInputFieldValue(throttle_max_pin1)
+        
+    # Attempt to Update the brake min value in the form
+    # Note: this does not update the config dict, and it has to be commited
+    # Return error message if any
+    def updateBrakeMinValueInForm(self, brake_min) -> str:
+        # only supports range from 0 to 4096
+        if not self.__isAppsValueValid(brake_min):
+            return "brake value must be an integer between 0 and 4095. Given value: " + str(brake_min)
+
+        self.brake_min_pin_widget.updateInputFieldValue(brake_min)
+        
+    # Attempt to Update the brake min value in the form
+    # Note: this does not update the config dict, and it has to be commited
+    # Return error message if any
+    def updateBrakeMaxValueInForm(self, brake_max) -> str:
+        # only supports range from 0 to 4096
+        if not self.__isAppsValueValid(brake_max):
+            return "brake value must be an integer between 0 and 4095. Given value: " + str(brake_max)
+
+        self.brake_min_pin_widget.updateInputFieldValue(brake_max)
+        
+    # Attempt to Update the brake min value in the form
+    # Note: this does not update the config dict, and it has to be commited
+    # Return error message if any
+    def updateRegenMinValueInForm(self, regen_min) -> str:
+        # only supports range from 0 to 4096
+        if not self.__isAppsValueValid(regen_min):
+            return "regen value must be an integer between 0 and 4095. Given value: " + str(regen_min)
+
+        self.regen_min_pin_widget.updateInputFieldValue(regen_min)
+        
+    # Attempt to Update the brake min value in the form
+    # Note: this does not update the config dict, and it has to be commited
+    # Return error message if any
+    def updateRegenMaxValueInForm(self, regen_max) -> str:
+        # only supports range from 0 to 4096
+        if not self.__isAppsValueValid(regen_max):
+            return "regen value must be an integer between 0 and 4095. Given value: " + str(regen_max)
+
+        self.regen_max_pin_widget.updateInputFieldValue(regen_max)
     
     # Updates the config dict with the current input in the form
     # Fails if the input is not valid

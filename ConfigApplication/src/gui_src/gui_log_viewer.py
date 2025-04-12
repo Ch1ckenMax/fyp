@@ -2,6 +2,7 @@ import customtkinter
 from threading import Thread
 from tkinter import messagebox, filedialog
 from datetime import datetime
+from src.gui_src.gui_calibrator_frame import CalibratorFrame
 
 LOG_TEXT_BOX_HEIGHT = 700
 BUTTON_WIDTH = 100
@@ -23,20 +24,26 @@ class LogViewerFrame(customtkinter.CTkFrame):
         self.log_text_box = customtkinter.CTkTextbox(self, height = LOG_TEXT_BOX_HEIGHT)
         self.log_text_box.insert("0.0", "Please click the connect button to start the program and read from the logs.\n")
         self.log_text_box.configure(state = "disabled")
-        self.log_text_box.grid(row = 0, column = 0, rowspan = 3, padx = 5, pady = 5, sticky = "news")
+        self.log_text_box.grid(row = 0, column = 0, rowspan = 1, padx = 5, pady = 5, sticky = "news")
+        
+        self.log_viewer_button_frame = customtkinter.CTkFrame(self)
+        self.log_viewer_button_frame.grid(row = 0, column = 1, sticky = "news", rowspan = 5)
 
         # Buttons
-        self.start_log_button = customtkinter.CTkButton(self, text="Start/Restart Program", command=self.__readLogs, width = BUTTON_WIDTH)
-        self.start_log_button.grid(row = 0, column = 1, padx = 5, pady = 5, sticky = "new")
+        self.start_log_button = customtkinter.CTkButton(self.log_viewer_button_frame, text="Start/Restart Program", command=self.__readLogs, width = BUTTON_WIDTH)
+        self.start_log_button.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = "new")
 
-        self.stop_log_button = customtkinter.CTkButton(self, text="Stop Logging", command=self.__stopLogs, width = BUTTON_WIDTH)
-        self.stop_log_button.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = "new")
+        self.stop_log_button = customtkinter.CTkButton(self.log_viewer_button_frame, text="Stop Logging", command=self.__stopLogs, width = BUTTON_WIDTH)
+        self.stop_log_button.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = "new")
         
-        self.stop_log_button = customtkinter.CTkButton(self, text="Save Log to Text File", command=self.__saveLogToFile, width = BUTTON_WIDTH)
-        self.stop_log_button.grid(row = 2, column = 1, padx = 5, pady = 5, sticky = "new")
+        self.stop_log_button = customtkinter.CTkButton(self.log_viewer_button_frame, text="Save Log to Text File", command=self.__saveLogToFile, width = BUTTON_WIDTH)
+        self.stop_log_button.grid(row = 2, column = 0, padx = 5, pady = 5, sticky = "new")
 
         # Destructor
         self.bind("<Destroy>", self.on_destroy)
+        
+    def saveRefToCalibratorFrame(self, calibrator_frame: CalibratorFrame):
+        self.calibrator_frame = calibrator_frame
 
     def __readLogs(self):
         # Do cleanup if another process is already running.
@@ -62,6 +69,14 @@ class LogViewerFrame(customtkinter.CTkFrame):
         line = stdout.readline()
         while line:
             log_text_box.insert("end", line)
+            
+            index = line.find(' ')
+            
+            # If the first space is found and the number of 
+            # characters after the space exceeds 8
+            if index != -1 and len(line) - (index + 1) > 8:
+                if line[index + 1: index + 9] == "[SENSOR]":
+                    self.calibrator_frame.updateBySensorLogLine(line)
             line = stdout.readline()
 
         # FOOTGUN: DO NOT PUT self.log_text_box.insert() beyond here. Otherwise, the thread will not join to the main thread properly!
