@@ -25,6 +25,12 @@
         "value": false,
         "description": "Enable/Disable Custom Level Logs in the SVW Data Console" 
     },
+    "sensorLoggingEnabled":
+    {
+        "type": "bool",
+        "value": false,
+        "description": "Enable/Disable Sensor Level Logs in the SVW Data Console (This is required for the Calibrator)" 
+    },
     "implausibleThresholdInterval":
     {
         "type": "uint32_t",
